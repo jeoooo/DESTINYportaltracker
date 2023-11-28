@@ -1,8 +1,13 @@
 # src/classes/website_checker.py
+import os
 import time
 import requests
-import logging  # Import the logging module
-from .api_handler import check_website_uptime
+import logging
+from dotenv import load_dotenv  # Import the load_dotenv function
+from classes.api_handler import check_website_uptime
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # Set up logging configuration
 logging.basicConfig(
@@ -11,9 +16,11 @@ logging.basicConfig(
 )
 
 def insert_website_status(school_id, website_id, status_code, description):
-    url = "http://127.0.0.1:8090/api/collections/website_status/records"
+    base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090")  # Default to localhost if not specified
+    api_key = os.getenv("API_KEY", "55d219232510d0da2575621e5ac5b61c") # Default API key
+    path = "/api/collections/website_status/records" 
+    url = base_url + path
     timestamp = int(time.time())
-    api_key = '55d219232510d0da2575621e5ac5b61c'  # Hardcoded API key
 
     payload = {
         'school_id': school_id,

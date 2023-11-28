@@ -1,0 +1,18 @@
+# Use the official Python image as a base image
+FROM python:3.8-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the local code and requirements to the container
+COPY . /app
+
+# Install dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Install dotenv
+RUN pip install python-dotenv
+
+# Run the script when the container starts
+CMD ["python", "main.py"]

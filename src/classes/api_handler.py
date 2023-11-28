@@ -15,9 +15,6 @@ logging.basicConfig(
     level=logging.INFO  # Set the desired logging level
 )
 
-# Suppress only the InsecureRequestWarning caused by unverified HTTPS requests
-warnings.filterwarnings("ignore", category=InsecureRequestWarning)
-
 
 # Suppress only the InsecureRequestWarning caused by unverified HTTPS requests
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
