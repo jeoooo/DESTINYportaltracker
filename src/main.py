@@ -1,11 +1,14 @@
-# src/main.py
 import os
 import time
 import requests
 import certifi
 from urllib3.exceptions import InsecureRequestWarning
-import logging  # Import the logging module
+import logging
+from dotenv import load_dotenv
 from classes.website_checker import check_website_uptime, insert_website_status
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # Set up logging configuration
 logging.basicConfig(
@@ -13,14 +16,13 @@ logging.basicConfig(
     level=logging.INFO  # Set the desired logging level
 )
 
-
 # Your API key loaded from the .env file
-# CREATE_API_KEY
-# api_key = os.getenv("CREATE_API_KEY")
+# TESTING_URL
+base_url = os.getenv("TESTING_URL")
+api_path = "/api/collections/website/records?skipTotal=false"
+api_url = base_url + api_path
 
 while True:
-    api_url = "http://127.0.0.1:8090/api/collections/website/records?skipTotal=false"
-
     response = requests.get(api_url, verify=certifi.where())
 
     if response.status_code == 200:
