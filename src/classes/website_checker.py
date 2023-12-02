@@ -17,7 +17,7 @@ logging.basicConfig(
 
 def insert_website_status(school_id, website_id, status_code, description):
     try:
-        base_url = os.getenv("TESTING_URL", "TESTING_URL")  # Default to localhost if not specified
+        base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090")   # run in production, else run locally in your machine
         api_key = os.getenv("API_KEY") # Default API key
         path = "/api/collections/website_status/records" 
         url = base_url + path

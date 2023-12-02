@@ -2,9 +2,7 @@
 import os
 import requests
 import logging
-import certifi
 from dotenv import load_dotenv
-
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -16,9 +14,7 @@ logging.basicConfig(
 )
 
 # Specify the custom path for the CA certificate bundle
-custom_ca_path = os.getenv("CA_CERTIFICATE_PATH")
-
-
+custom_ca_path = os.getenv('CUSTOM_CA_PATH', 'certificates/cacert.pem') # NOTE: need to setup docker ca path first in Docker Desktop to work, for local use 'certificates/cacert.pem'
 
 def check_website_uptime(url):
     try:

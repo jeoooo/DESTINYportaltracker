@@ -18,7 +18,7 @@ logging.basicConfig(
 
 # Your API key loaded from the .env file
 # TESTING_URL
-base_url = os.getenv("TESTING_URL", "TESTING_URL")
+base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090") # run in production, else run locally in your machine
 api_path = "/api/collections/website/records?skipTotal=false"
 api_url = base_url + api_path
 
