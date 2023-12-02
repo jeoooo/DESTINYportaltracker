@@ -16,22 +16,30 @@ logging.basicConfig(
 )
 
 def insert_website_status(school_id, website_id, status_code, description):
-    base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090")  # Default to localhost if not specified
-    api_key = os.getenv("API_KEY", "55d219232510d0da2575621e5ac5b61c") # Default API key
-    path = "/api/collections/website_status/records" 
-    url = base_url + path
-    timestamp = int(time.time())
+    try:
+        base_url = os.getenv("TESTING_URL", "TESTING_URL")  # Default to localhost if not specified
+        api_key = os.getenv("API_KEY") # Default API key
+        path = "/api/collections/website_status/records" 
+        url = base_url + path
+        timestamp = int(time.time())
 
-    payload = {
-        'school_id': school_id,
-        'website_id': website_id,
-        'status_code': status_code,
-        'description': description,
-        'timestamp': timestamp,
-        'api_key': api_key,
-    }
-    headers = {'Content-Type': 'application/json'}
+        payload = {
+            'school_id': school_id,
+            'website_id': website_id,
+            'status_code': status_code,
+            'description': description,
+            'timestamp': timestamp,
+            'api_key': api_key,
+        }
+        headers = {'Content-Type': 'application/json'}
 
-    response = requests.post(url, json=payload, headers=headers)
+        response = requests.post(url, json=payload, headers=headers)
 
-    logging.info(response.text)
+        response.raise_for_status()  # Raise HTTPError for bad responses
+
+        logging.info(response.text)
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request failed: {e}")
+
+

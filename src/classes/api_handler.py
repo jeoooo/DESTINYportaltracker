@@ -1,10 +1,11 @@
 # src/classes/api_handler.py
+import os
 import requests
-import certifi
-from urllib3.exceptions import InsecureRequestWarning
-import warnings
 import logging  # Import the logging module
-
+import certifi
+import warnings
+from dotenv import load_dotenv
+from urllib3.exceptions import InsecureRequestWarning
 # Load environment variables from the .env file
 # from dotenv import load_dotenv
 # load_dotenv()
@@ -15,19 +16,17 @@ logging.basicConfig(
     level=logging.INFO  # Set the desired logging level
 )
 
+# Specify the custom path for the CA certificate bundle
+custom_ca_path = os.getenv("CA_CERTIFICATE_PATH")
 
 # Suppress only the InsecureRequestWarning caused by unverified HTTPS requests
-warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+# warnings.filterwarnings("ignore", category=InsecureRequestWarning)
 
 def check_website_uptime(url):
     try:
-        if "student.umindanao.edu.ph" in url or "hcdc.edu.ph" in url:
-            response = requests.get(url, verify=False)
-        else:
-            response = requests.get(url, verify=certifi.where())
+        response = requests.get(url, verify=custom_ca_path)
 
         return response.status_code
     except requests.ConnectionError as e:
         error_msg = str(e)
         return f"Failed to connect to the website {url}. Exception: {error_msg}"
-
