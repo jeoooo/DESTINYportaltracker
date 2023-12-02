@@ -11,27 +11,33 @@ load_dotenv()
 
 # Set up logging configuration
 logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format='\033[97m%(asctime)s - [POCKETBASE - INSERT] - %(levelname)s - %(message)s\033[0m',
     level=logging.INFO  # Set the desired logging level
 )
 
 def insert_website_status(school_id, website_id, status_code, description):
-    base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090")  # Default to localhost if not specified
-    api_key = os.getenv("API_KEY", "55d219232510d0da2575621e5ac5b61c") # Default API key
-    path = "/api/collections/website_status/records" 
-    url = base_url + path
-    timestamp = int(time.time())
+    try:
+        base_url = os.getenv("PRODUCTION_URL", "http://127.0.0.1:8090")   # run in production, else run locally in your machine
+        api_key = os.getenv("API_KEY") # Default API key
+        path = "/api/collections/website_status/records" 
+        url = base_url + path
+        timestamp = int(time.time())
 
-    payload = {
-        'school_id': school_id,
-        'website_id': website_id,
-        'status_code': status_code,
-        'description': description,
-        'timestamp': timestamp,
-        'api_key': api_key,
-    }
-    headers = {'Content-Type': 'application/json'}
+        payload = {
+            'school_id': school_id,
+            'website_id': website_id,
+            'status_code': status_code,
+            'description': description,
+            'timestamp': timestamp,
+            'api_key': api_key,
+        }
+        headers = {'Content-Type': 'application/json'}
 
-    response = requests.post(url, json=payload, headers=headers)
+        response = requests.post(url, json=payload, headers=headers)
 
-    logging.info(response.text)
+        response.raise_for_status()  # Raise HTTPError for bad responses
+
+        logging.info(f"\033[97m{response.text} - School ID: {school_id}, Website ID: {website_id}, Status Code: {status_code}, Description: {description}, Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}\033[0m")
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"\033[97mRequest failed: {e}\033[0m")
